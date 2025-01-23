@@ -1,0 +1,17 @@
+#
+# Copyright (C) 2016+ AzerothCore <www.azerothcore.org>, released under GNU AGPL v3 license: https://github.com/azerothcore/azerothcore-wotlk/blob/master/LICENSE-AGPL3
+#
+
+[worldserver]
+
+########################################
+# Peacekeeper module configuration
+########################################
+#
+#    Peacekeeper.Enable
+#        Description: Enable the Peacekeeper module
+#        Default:     0 - Disabled
+#                     1 - Enabled
+#
+
+Peacekeeper.Enable = 1
