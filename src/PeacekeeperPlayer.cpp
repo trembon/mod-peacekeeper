@@ -4,6 +4,10 @@
 #include "Chat.h"
 #include "ReputationMgr.h"
 
+const int32 AHeroesBurden_QuestID = 12581;
+const int32 FrenzyheartTribe_FactionID = 1104;
+const int32 TheOracles_FactionID = 1105;
+
 class PeacekeeperPlayer : public PlayerScript
 {
 public:
@@ -13,32 +17,36 @@ public:
     {
         if (sConfigMgr->GetOption<bool>("Peacekeeper.Enable", false))
         {
-            QuestStatus aHeroesBurdenStatus = player->GetQuestStatus(12581);
-            if (aHeroesBurdenStatus == QUEST_STATUS_REWARDED) {
-                ReputationMgr& repMgr = player->GetReputationMgr();
-
-                const int32 repToFriendly = repMgr.ReputationRankToStanding(REP_FRIENDLY);
-
-                ReputationRank frenzyheartTribe = player->GetReputationRank(1104);
-                if (frenzyheartTribe == REP_HATED || frenzyheartTribe == REP_HOSTILE) {
-                    const FactionEntry* frenzyheartTribeEntry = sFactionStore.LookupEntry(1104);
-
-                    repMgr.SetOneFactionReputation(frenzyheartTribeEntry, repToFriendly + 5001.f, false, REP_HONORED);
-                    repMgr.SetAtWar(frenzyheartTribeEntry->reputationListID, false);
-
-                    repMgr.SendState(repMgr.GetState(frenzyheartTribeEntry->reputationListID));
-                }
-
-                ReputationRank oracles = player->GetReputationRank(1105);
-                if (oracles == REP_HATED || oracles == REP_HOSTILE) {
-                    const FactionEntry* oraclesEntry = sFactionStore.LookupEntry(1105);
-
-                    repMgr.SetOneFactionReputation(oraclesEntry, repToFriendly + 5001.f, false, REP_HONORED);
-                    repMgr.SetAtWar(oraclesEntry->reputationListID, false);
-
-                    repMgr.SendState(repMgr.GetState(oraclesEntry->reputationListID));
-                }
+            if (sConfigMgr->GetOption<bool>("Peacekeeper.Announce", true))
+            {
+                ChatHandler(player->GetSession()).SendSysMessage("This server is running the |cff4CFF00Peacekeeper |rmodule.");
             }
+
+            QuestStatus aHeroesBurdenStatus = player->GetQuestStatus(AHeroesBurden_QuestID);
+            if (aHeroesBurdenStatus == QUEST_STATUS_REWARDED) {
+                FixOraclesOrFrenzyheartReputation(player, TheOracles_FactionID);
+                FixOraclesOrFrenzyheartReputation(player, FrenzyheartTribe_FactionID);
+            }
+        }
+    }
+
+private:
+    void FixOraclesOrFrenzyheartReputation(Player* player, uint32 factionId) {
+        ReputationMgr& repMgr = player->GetReputationMgr();
+
+        ReputationRank rep_rank = player->GetReputationRank(factionId);
+        if (rep_rank == REP_HATED || rep_rank == REP_HOSTILE) {
+            const FactionEntry* entry = sFactionStore.LookupEntry(factionId);
+
+            const int32 repToFriendly = repMgr.ReputationRankToStanding(REP_FRIENDLY);
+            repMgr.SetOneFactionReputation(entry, repToFriendly + 5001.f, false, REP_HONORED);
+
+            repMgr.SendState(repMgr.GetState(entry->reputationListID));
+        }
+
+        if (repMgr.IsAtWar(factionId)) {
+            repMgr.SetAtWar(factionId, false);
+            repMgr.SendState(repMgr.GetState(factionId));
         }
     }
 };
