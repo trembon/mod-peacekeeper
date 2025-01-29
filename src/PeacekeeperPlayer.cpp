@@ -25,36 +25,32 @@ public:
             QuestStatus aHeroesBurdenStatus = player->GetQuestStatus(AHeroesBurden_QuestID);
             if (aHeroesBurdenStatus == QUEST_STATUS_REWARDED) {
                 ReputationMgr& repMgr = player->GetReputationMgr();
-
-                FixOraclesOrFrenzyheartReputation(player, repMgr, TheOracles_FactionID);
-                FixOraclesOrFrenzyheartReputation(player, repMgr, FrenzyheartTribe_FactionID);
+                FixOraclesAndFrenzyheartReputation(player, repMgr);
             }
         }
     }
 
 private:
-    void FixOraclesOrFrenzyheartReputation(Player* player, ReputationMgr& repMgr, uint32 factionId) {
-        LOG_INFO("module", "Fixing rep :: init {}", factionId);
+    void FixOraclesAndFrenzyheartReputation(Player* player, ReputationMgr& repMgr) {
+        const int32 repToFriendly = repMgr.ReputationRankToStanding(REP_FRIENDLY);
 
-        LOG_INFO("module", "Fixing rep :: checking war");
-        if (repMgr.IsAtWar(factionId)) {
-            LOG_INFO("module", "Fixing rep :: is at war");
-            repMgr.SetAtWar(factionId, false);
-            LOG_INFO("module", "Fixing rep :: no longer at war");
+        ReputationRank frenzyheartTribe = player->GetReputationRank(FrenzyheartTribe_FactionID);
+        if (frenzyheartTribe == REP_HATED || frenzyheartTribe == REP_HOSTILE) {
+            const FactionEntry* frenzyheartTribeEntry = sFactionStore.LookupEntry(FrenzyheartTribe_FactionID);
+
+            repMgr.SetOneFactionReputation(frenzyheartTribeEntry, repToFriendly + 5001.f, false, REP_HONORED);
+            repMgr.SetAtWar(frenzyheartTribeEntry->reputationListID, false);
+
+            repMgr.SendState(repMgr.GetState(frenzyheartTribeEntry->reputationListID));
         }
 
-        ReputationRank rep_rank = player->GetReputationRank(factionId);
-        LOG_INFO("module", "Fixing rep :: rank {}", rep_rank);
-        if (rep_rank == REP_HATED || rep_rank == REP_HOSTILE) {
-            const FactionEntry* entry = sFactionStore.LookupEntry(factionId);
-            LOG_INFO("module", "Fixing rep :: loaded faction");
+        ReputationRank oracles = player->GetReputationRank(TheOracles_FactionID);
+        if (oracles == REP_HATED || oracles == REP_HOSTILE) {
+            const FactionEntry* oraclesEntry = sFactionStore.LookupEntry(TheOracles_FactionID);
+            repMgr.SetOneFactionReputation(oraclesEntry, repToFriendly + 5001.f, false, REP_HONORED);
+            repMgr.SetAtWar(oraclesEntry->reputationListID, false);
 
-            const int32 repToFriendly = repMgr.ReputationRankToStanding(REP_FRIENDLY);
-            repMgr.SetOneFactionReputation(entry, repToFriendly + 5001.f, false, REP_HONORED);
-            LOG_INFO("module", "Fixing rep :: set reputation");
-
-            LOG_INFO("module", "Fixing rep :: sending state for {}", factionId);
-            repMgr.SendState(repMgr.GetState(factionId));
+            repMgr.SendState(repMgr.GetState(oraclesEntry->reputationListID));
         }
     }
 };
