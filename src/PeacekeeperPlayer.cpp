@@ -36,6 +36,13 @@ private:
     void FixOraclesOrFrenzyheartReputation(Player* player, ReputationMgr& repMgr, uint32 factionId) {
         LOG_INFO("module", "Fixing rep :: init {}", factionId);
 
+        LOG_INFO("module", "Fixing rep :: checking war");
+        if (repMgr.IsAtWar(factionId)) {
+            LOG_INFO("module", "Fixing rep :: is at war");
+            repMgr.SetAtWar(factionId, false);
+            LOG_INFO("module", "Fixing rep :: no longer at war");
+        }
+
         ReputationRank rep_rank = player->GetReputationRank(factionId);
         LOG_INFO("module", "Fixing rep :: rank {}", rep_rank);
         if (rep_rank == REP_HATED || rep_rank == REP_HOSTILE) {
@@ -48,13 +55,6 @@ private:
 
             LOG_INFO("module", "Fixing rep :: sending state for {}", factionId);
             repMgr.SendState(repMgr.GetState(factionId));
-        }
-
-        LOG_INFO("module", "Fixing rep :: checking war");
-        if (repMgr.IsAtWar(factionId)) {
-            LOG_INFO("module", "Fixing rep :: is at war");
-            repMgr.SetAtWar(factionId, false);
-            LOG_INFO("module", "Fixing rep :: no longer at war");
         }
     }
 };
