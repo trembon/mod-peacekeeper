@@ -1,6 +1,6 @@
 void AddPeacekeeperPlayerScripts();
 
-void AddPeacekeeper_moduleScripts()
+void Addmod_peacekeeperScripts()
 {
     AddPeacekeeperPlayerScripts();
 }
