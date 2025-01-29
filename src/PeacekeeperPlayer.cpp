@@ -33,6 +33,7 @@ public:
 private:
     void FixOraclesOrFrenzyheartReputation(Player* player, uint32 factionId) {
         ReputationMgr& repMgr = player->GetReputationMgr();
+        bool hasChange = false;
 
         ReputationRank rep_rank = player->GetReputationRank(factionId);
         if (rep_rank == REP_HATED || rep_rank == REP_HOSTILE) {
@@ -41,11 +42,15 @@ private:
             const int32 repToFriendly = repMgr.ReputationRankToStanding(REP_FRIENDLY);
             repMgr.SetOneFactionReputation(entry, repToFriendly + 5001.f, false, REP_HONORED);
 
-            repMgr.SendState(repMgr.GetState(entry->reputationListID));
+            hasChange = true;
         }
 
         if (repMgr.IsAtWar(factionId)) {
             repMgr.SetAtWar(factionId, false);
+            hasChange = true;
+        }
+
+        if (hasChange) {
             repMgr.SendState(repMgr.GetState(factionId));
         }
     }
