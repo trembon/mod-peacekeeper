@@ -17,7 +17,8 @@ public:
             LOG_INFO("module", "Peacekeeper :: enabled");
             QuestStatus aHeroesBurdenStatus = player->GetQuestStatus(12581);
             LOG_INFO("module", "Peacekeeper :: quest status {}", aHeroesBurdenStatus);
-            if (aHeroesBurdenStatus == QUEST_STATUS_COMPLETE) {
+            if (aHeroesBurdenStatus == QUEST_STATUS_REWARDED) {
+                LOG_INFO("module", "Peacekeeper :: quest is rewarded, continue");
                 ReputationMgr& repMgr = player->GetReputationMgr();
 
                 ReputationRank frenzyheartTribe = player->GetReputationRank(1104);
