@@ -24,16 +24,24 @@ public:
                 ReputationRank frenzyheartTribe = player->GetReputationRank(1104);
                 LOG_INFO("module", "Peacekeeper :: frenzyheartTribe {}", frenzyheartTribe);
                 if (frenzyheartTribe == REP_HATED || frenzyheartTribe == REP_HOSTILE) {
-                    repMgr.SetOneFactionReputation(sFactionStore.LookupEntry(1104), 42999.f, false, REP_HONORED);
-                    ChatHandler(player->GetSession()).SendSysMessage("Reputation with Frenzyheart Tribe as increased, verify you are no longer At War with them.");
+                    const FactionEntry* frenzyheartTribeEntry = sFactionStore.LookupEntry(1104);
+                    repMgr.SetOneFactionReputation(frenzyheartTribeEntry, 42999.f, false, REP_HONORED);
+                    repMgr.SetOneFactionReputation(frenzyheartTribeEntry, -6999.f, true, REP_HONORED);
+                    repMgr.SetAtWar(frenzyheartTribeEntry->ID, false);
+                    LOG_INFO("module", "Peacekeeper :: frenzyheartTribe increased");
                 }
 
                 ReputationRank oracles = player->GetReputationRank(1105);
                 LOG_INFO("module", "Peacekeeper :: oracles {}", oracles);
                 if (oracles == REP_HATED || oracles == REP_HOSTILE) {
-                    repMgr.SetOneFactionReputation(sFactionStore.LookupEntry(1105), 42999.f, false, REP_HONORED);
-                    ChatHandler(player->GetSession()).SendSysMessage("Reputation with The Oracles as increased, verify you are no longer At War with them.");
+                    const FactionEntry* oraclesEntry = sFactionStore.LookupEntry(1105);
+                    repMgr.SetOneFactionReputation(oraclesEntry, 42999.f, false, REP_HONORED);
+                    repMgr.SetOneFactionReputation(oraclesEntry, -6999.f, true, REP_HONORED);
+                    repMgr.SetAtWar(oraclesEntry->ID, false);
+                    LOG_INFO("module", "Peacekeeper :: oracles increased");
                 }
+
+                repMgr.SendStates();
             }
         }
     }
