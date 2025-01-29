@@ -35,7 +35,6 @@ public:
 private:
     void FixOraclesOrFrenzyheartReputation(Player* player, ReputationMgr& repMgr, uint32 factionId) {
         LOG_INFO("module", "Fixing rep :: init {}", factionId);
-        bool hasChange = false;
 
         ReputationRank rep_rank = player->GetReputationRank(factionId);
         LOG_INFO("module", "Fixing rep :: rank {}", rep_rank);
@@ -47,7 +46,8 @@ private:
             repMgr.SetOneFactionReputation(entry, repToFriendly + 5001.f, false, REP_HONORED);
             LOG_INFO("module", "Fixing rep :: set reputation");
 
-            hasChange = true;
+            LOG_INFO("module", "Fixing rep :: sending state for {}", factionId);
+            repMgr.SendState(repMgr.GetState(factionId));
         }
 
         LOG_INFO("module", "Fixing rep :: checking war");
@@ -55,12 +55,6 @@ private:
             LOG_INFO("module", "Fixing rep :: is at war");
             repMgr.SetAtWar(factionId, false);
             LOG_INFO("module", "Fixing rep :: no longer at war");
-            hasChange = true;
-        }
-
-        if (hasChange) {
-            LOG_INFO("module", "Fixing rep :: sending state for {}", factionId);
-            repMgr.SendState(repMgr.GetState(factionId));
         }
     }
 };
