@@ -26,9 +26,9 @@ public:
                 if (frenzyheartTribe == REP_HATED || frenzyheartTribe == REP_HOSTILE) {
                     const FactionEntry* frenzyheartTribeEntry = sFactionStore.LookupEntry(1104);
                     LOG_INFO("module", "Peacekeeper :: loaded entry");
-                    repMgr.SetOneFactionReputation(frenzyheartTribeEntry, 65000.f, false, REP_HONORED);
+                    repMgr.SetOneFactionReputation(frenzyheartTribeEntry, 70000.f, false, REP_HONORED);
                     LOG_INFO("module", "Peacekeeper :: set friendly");
-                    repMgr.SetOneFactionReputation(frenzyheartTribeEntry, -6999.f, true, REP_HONORED);
+                    repMgr.SetOneFactionReputation(frenzyheartTribeEntry, -6999.f, false, REP_HONORED);
                     LOG_INFO("module", "Peacekeeper :: set bit into honored");
                     repMgr.SetAtWar(frenzyheartTribeEntry->reputationListID, false);
                     LOG_INFO("module", "Peacekeeper :: set not at war");
@@ -42,9 +42,9 @@ public:
                 if (oracles == REP_HATED || oracles == REP_HOSTILE) {
                     const FactionEntry* oraclesEntry = sFactionStore.LookupEntry(1105);
                     LOG_INFO("module", "Peacekeeper :: loaded entry");
-                    repMgr.SetOneFactionReputation(oraclesEntry, 65000.f, false, REP_HONORED);
+                    repMgr.SetOneFactionReputation(oraclesEntry, 70000.f, false, REP_HONORED);
                     LOG_INFO("module", "Peacekeeper :: set friendly");
-                    repMgr.SetOneFactionReputation(oraclesEntry, -6999.f, true, REP_HONORED);
+                    repMgr.SetOneFactionReputation(oraclesEntry, -6999.f, false, REP_HONORED);
                     LOG_INFO("module", "Peacekeeper :: set bit into honored");
                     repMgr.SetAtWar(oraclesEntry->reputationListID, false);
                     LOG_INFO("module", "Peacekeeper :: set not at war");
