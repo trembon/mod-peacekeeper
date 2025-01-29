@@ -25,11 +25,15 @@ public:
                 LOG_INFO("module", "Peacekeeper :: frenzyheartTribe {}", frenzyheartTribe);
                 if (frenzyheartTribe == REP_HATED || frenzyheartTribe == REP_HOSTILE) {
                     const FactionEntry* frenzyheartTribeEntry = sFactionStore.LookupEntry(1104);
+                    LOG_INFO("module", "Peacekeeper :: loaded entry");
                     repMgr.SetOneFactionReputation(frenzyheartTribeEntry, 65000.f, false, REP_FRIENDLY);
+                    LOG_INFO("module", "Peacekeeper :: set friendly");
                     repMgr.SetOneFactionReputation(frenzyheartTribeEntry, 5000.f, true, REP_HONORED);
-                    repMgr.SetAtWar(frenzyheartTribeEntry->ID, false);
+                    LOG_INFO("module", "Peacekeeper :: set bit into honored");
+                    repMgr.SetAtWar(frenzyheartTribeEntry->reputationListID, false);
+                    LOG_INFO("module", "Peacekeeper :: set not at war");
 
-                    repMgr.SendState(repMgr.GetState(frenzyheartTribeEntry->ID));
+                    repMgr.SendState(repMgr.GetState(frenzyheartTribeEntry->reputationListID));
                     LOG_INFO("module", "Peacekeeper :: frenzyheartTribe increased");
                 }
 
@@ -37,11 +41,15 @@ public:
                 LOG_INFO("module", "Peacekeeper :: oracles {}", oracles);
                 if (oracles == REP_HATED || oracles == REP_HOSTILE) {
                     const FactionEntry* oraclesEntry = sFactionStore.LookupEntry(1105);
+                    LOG_INFO("module", "Peacekeeper :: loaded entry");
                     repMgr.SetOneFactionReputation(oraclesEntry, 65000.f, false, REP_FRIENDLY);
+                    LOG_INFO("module", "Peacekeeper :: set friendly");
                     repMgr.SetOneFactionReputation(oraclesEntry, 5000.f, true, REP_HONORED);
-                    repMgr.SetAtWar(oraclesEntry->ID, false);
+                    LOG_INFO("module", "Peacekeeper :: set bit into honored");
+                    repMgr.SetAtWar(oraclesEntry->reputationListID, false);
+                    LOG_INFO("module", "Peacekeeper :: set not at war");
 
-                    repMgr.SendState(repMgr.GetState(oraclesEntry->ID));
+                    repMgr.SendState(repMgr.GetState(oraclesEntry->reputationListID));
 
                     LOG_INFO("module", "Peacekeeper :: oracles increased");
                 }
