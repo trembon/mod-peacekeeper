@@ -11,50 +11,32 @@ public:
 
     void OnLogin(Player* player) override
     {
-        LOG_INFO("module", "Peacekeeper :: player login");
         if (sConfigMgr->GetOption<bool>("Peacekeeper.Enable", false))
         {
-            LOG_INFO("module", "Peacekeeper :: enabled");
             QuestStatus aHeroesBurdenStatus = player->GetQuestStatus(12581);
-            LOG_INFO("module", "Peacekeeper :: quest status {}", aHeroesBurdenStatus);
             if (aHeroesBurdenStatus == QUEST_STATUS_REWARDED) {
-                LOG_INFO("module", "Peacekeeper :: quest is rewarded, continue");
                 ReputationMgr& repMgr = player->GetReputationMgr();
 
+                const int32 repToFriendly = repMgr.ReputationRankToStanding(REP_FRIENDLY);
+
                 ReputationRank frenzyheartTribe = player->GetReputationRank(1104);
-                LOG_INFO("module", "Peacekeeper :: frenzyheartTribe {}", frenzyheartTribe);
                 if (frenzyheartTribe == REP_HATED || frenzyheartTribe == REP_HOSTILE) {
                     const FactionEntry* frenzyheartTribeEntry = sFactionStore.LookupEntry(1104);
-                    LOG_INFO("module", "Peacekeeper :: loaded entry");
-
-                    const int32 repToFriendly = repMgr.ReputationRankToStanding(REP_FRIENDLY);
 
                     repMgr.SetOneFactionReputation(frenzyheartTribeEntry, repToFriendly + 5001.f, false, REP_HONORED);
-                    LOG_INFO("module", "Peacekeeper :: set friendly");
-                    //repMgr.SetOneFactionReputation(frenzyheartTribeEntry, -6999.f, false, REP_HONORED);
-                    LOG_INFO("module", "Peacekeeper :: set bit into honored");
                     repMgr.SetAtWar(frenzyheartTribeEntry->reputationListID, false);
-                    LOG_INFO("module", "Peacekeeper :: set not at war");
 
                     repMgr.SendState(repMgr.GetState(frenzyheartTribeEntry->reputationListID));
-                    LOG_INFO("module", "Peacekeeper :: frenzyheartTribe increased");
                 }
 
                 ReputationRank oracles = player->GetReputationRank(1105);
-                LOG_INFO("module", "Peacekeeper :: oracles {}", oracles);
                 if (oracles == REP_HATED || oracles == REP_HOSTILE) {
                     const FactionEntry* oraclesEntry = sFactionStore.LookupEntry(1105);
-                    LOG_INFO("module", "Peacekeeper :: loaded entry");
-                    repMgr.SetOneFactionReputation(oraclesEntry, 70000.f, false, REP_HONORED);
-                    LOG_INFO("module", "Peacekeeper :: set friendly");
-                    repMgr.SetOneFactionReputation(oraclesEntry, -6999.f, false, REP_HONORED);
-                    LOG_INFO("module", "Peacekeeper :: set bit into honored");
+
+                    repMgr.SetOneFactionReputation(oraclesEntry, repToFriendly + 5001.f, false, REP_HONORED);
                     repMgr.SetAtWar(oraclesEntry->reputationListID, false);
-                    LOG_INFO("module", "Peacekeeper :: set not at war");
 
                     repMgr.SendState(repMgr.GetState(oraclesEntry->reputationListID));
-
-                    LOG_INFO("module", "Peacekeeper :: oracles increased");
                 }
             }
         }
