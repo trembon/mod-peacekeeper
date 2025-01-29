@@ -26,9 +26,12 @@ public:
                 if (frenzyheartTribe == REP_HATED || frenzyheartTribe == REP_HOSTILE) {
                     const FactionEntry* frenzyheartTribeEntry = sFactionStore.LookupEntry(1104);
                     LOG_INFO("module", "Peacekeeper :: loaded entry");
-                    repMgr.SetOneFactionReputation(frenzyheartTribeEntry, 70000.f, false, REP_HONORED);
+
+                    const int32 repToFriendly = repMgr.ReputationRankToStanding(REP_FRIENDLY);
+
+                    repMgr.SetOneFactionReputation(frenzyheartTribeEntry, repToFriendly + 5001.f, false, REP_HONORED);
                     LOG_INFO("module", "Peacekeeper :: set friendly");
-                    repMgr.SetOneFactionReputation(frenzyheartTribeEntry, -6999.f, false, REP_HONORED);
+                    //repMgr.SetOneFactionReputation(frenzyheartTribeEntry, -6999.f, false, REP_HONORED);
                     LOG_INFO("module", "Peacekeeper :: set bit into honored");
                     repMgr.SetAtWar(frenzyheartTribeEntry->reputationListID, false);
                     LOG_INFO("module", "Peacekeeper :: set not at war");
