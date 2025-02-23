@@ -39,7 +39,7 @@ public:
             // what to do when faction is affected by peacekeeper?
             // dont allow decrease of reputation
             // if one faction gains rep, the other one gains as well
-            ObjectGuid playerID = player->GetGUID();
+            const ObjectGuid playerID = player->GetGUID();
             LOG_INFO("module", "rep gain :: player {}, faction {}, standing {}", playerID, factionID, standing);
             if (activeHandlers[playerID] == 0) {
                 activeHandlers[playerID] = factionID;
