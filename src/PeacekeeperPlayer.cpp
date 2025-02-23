@@ -35,6 +35,7 @@ public:
             }
 
             if (HasCompleted_AHeroesBurden(player)) {
+                CompleteRequiredOracleAndFrenzyheartPreQuests(player);
                 SyncOraclesAndFrenzyheartReputation(player);
             }
         }
