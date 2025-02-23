@@ -27,8 +27,7 @@ public:
             }
 
             if (HasCompleted_AHeroesBurden(player)) {
-                ReputationMgr& repMgr = player->GetReputationMgr();
-                FixOraclesAndFrenzyheartReputation(player, repMgr);
+                SyncOraclesAndFrenzyheartReputation(player);
             }
         }
     }
@@ -92,26 +91,26 @@ private:
         return true;
     }
 
-    void FixOraclesAndFrenzyheartReputation(Player* player, ReputationMgr& repMgr) {
-        const int32 repToFriendly = repMgr.ReputationRankToStanding(REP_FRIENDLY);
+    void SyncOraclesAndFrenzyheartReputation(Player* player) {
+        ReputationMgr& repMgr = player->GetReputationMgr();
 
-        ReputationRank frenzyheartTribe = player->GetReputationRank(FrenzyheartTribe_FactionID);
-        if (frenzyheartTribe == REP_HATED || frenzyheartTribe == REP_HOSTILE) {
-            const FactionEntry* frenzyheartTribeEntry = sFactionStore.LookupEntry(FrenzyheartTribe_FactionID);
+        const FactionEntry* frenzyheartTribeEntry = sFactionStore.LookupEntry(FrenzyheartTribe_FactionID);
+        const FactionEntry* oraclesEntry = sFactionStore.LookupEntry(TheOracles_FactionID);
 
-            repMgr.SetOneFactionReputation(frenzyheartTribeEntry, repToFriendly + 5001.f, false, REP_HONORED);
-            repMgr.SetAtWar(frenzyheartTribeEntry->reputationListID, false);
+        int32 frenzyheartTribeRep = repMgr.GetReputation(frenzyheartTribeEntry);
+        int32 oraclesRep = repMgr.GetReputation(oraclesEntry);
 
-            repMgr.SendState(repMgr.GetState(frenzyheartTribeEntry->reputationListID));
-        }
-
-        ReputationRank oracles = player->GetReputationRank(TheOracles_FactionID);
-        if (oracles == REP_HATED || oracles == REP_HOSTILE) {
-            const FactionEntry* oraclesEntry = sFactionStore.LookupEntry(TheOracles_FactionID);
-            repMgr.SetOneFactionReputation(oraclesEntry, repToFriendly + 5001.f, false, REP_HONORED);
+        if (frenzyheartTribeRep > oraclesRep) {
+            repMgr.SetOneFactionReputation(oraclesEntry, frenzyheartTribeRep, false);
             repMgr.SetAtWar(oraclesEntry->reputationListID, false);
 
             repMgr.SendState(repMgr.GetState(oraclesEntry->reputationListID));
+        }
+        if (oraclesRep > frenzyheartTribeRep) {
+            repMgr.SetOneFactionReputation(frenzyheartTribeEntry, oraclesRep, false);
+            repMgr.SetAtWar(frenzyheartTribeEntry->reputationListID, false);
+
+            repMgr.SendState(repMgr.GetState(frenzyheartTribeEntry->reputationListID));
         }
     }
 };
