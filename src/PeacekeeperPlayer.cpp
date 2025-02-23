@@ -21,8 +21,6 @@ public:
     {
         m_ModuleEnabled = sConfigMgr->GetOption<bool>("Peacekeeper.Enable", false);
         m_AnnounceModuleEnabled = sConfigMgr->GetOption<bool>("Peacekeeper.Announce", false);
-
-        activeHandlers = {};
     }
 
     void OnPlayerLogin(Player* player) override
@@ -40,7 +38,7 @@ public:
         }
     }
 
-    bool OnPlayerReputationChange(Player* player, uint32 factionID, int32& standing, bool incremental) override {
+    bool OnPlayerReputationChange(Player* player, uint32 factionID, int32& standing, bool /*incremental*/) override {
         bool result = true;
         if (m_ModuleEnabled)
         {
@@ -111,7 +109,7 @@ private:
         int32 frenzyheartTribeRep = repMgr.GetReputation(frenzyheartTribeEntry);
         int32 oraclesRep = repMgr.GetReputation(oraclesEntry);
 
-        LOG_INFO("module", "sync rep :: player {}, frenzy {}, oracles {}", player->GetGUID(), frenzyheartTribeRep, oraclesRep);
+        LOG_INFO("module", "sync rep :: player {}, frenzy {}, oracles {}", player->GetName(), frenzyheartTribeRep, oraclesRep);
 
         if (frenzyheartTribeRep > oraclesRep) {
             LOG_INFO("module", "sync rep :: setting oracles rep to {}", frenzyheartTribeRep);
