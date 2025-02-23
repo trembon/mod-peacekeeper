@@ -47,11 +47,11 @@ public:
             // what to do when faction is affected by peacekeeper?
             // dont allow decrease of reputation
             // if one faction gains rep, the other one gains as well
-            const ObjectGuid playerID = player->GetGUID();
-            LOG_INFO("module", "rep gain :: player {}, faction {}, standing {}", playerID, factionID, standing);
-            if (activeHandlers[playerID] == 0) {
-                activeHandlers[playerID] = factionID;
-                LOG_INFO("module", "rep gain :: can handle player {}", playerID);
+            const std::string playerName = player->GetName();
+            LOG_INFO("module", "rep gain :: player {}, faction {}, standing {}", playerName, factionID, standing);
+            if (activeHandlers[playerName] == 0) {
+                activeHandlers[playerName] = factionID;
+                LOG_INFO("module", "rep gain :: can handle player {}", playerName);
 
                 // handle faction The Oracles and Frenzyheart Tribe, as they should only be handled after the quest has been completed
                 if ((factionID == FrenzyheartTribe_FactionID || factionID == TheOracles_FactionID) && HasCompleted_AHeroesBurden(player)) {
@@ -66,7 +66,7 @@ public:
                     }
                 }
 
-                activeHandlers.erase(playerID);
+                activeHandlers.erase(playerName);
             }
         }
 
@@ -77,7 +77,7 @@ private:
     bool m_ModuleEnabled = false;
     bool m_AnnounceModuleEnabled = false;
 
-    std::map<ObjectGuid, uint32> activeHandlers;
+    std::map<std::string, uint32> activeHandlers;
 
     bool HasCompleted_AHeroesBurden(Player* player) {
         QuestStatus aHeroesBurdenStatus = player->GetQuestStatus(AHeroesBurden_QuestID);
