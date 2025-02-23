@@ -100,7 +100,7 @@ private:
         int32 frenzyheartTribeRep = repMgr.GetReputation(frenzyheartTribeEntry);
         int32 oraclesRep = repMgr.GetReputation(oraclesEntry);
 
-        LOG_INFO("module", "sync rep :: player {}, frenzy {}, oracles {}", playerID, frenzyheartTribeRep, oraclesRep);
+        LOG_INFO("module", "sync rep :: player {}, frenzy {}, oracles {}", player->GetGUID(), frenzyheartTribeRep, oraclesRep);
 
         if (frenzyheartTribeRep > oraclesRep) {
             LOG_INFO("module", "sync rep :: setting oracles rep to {}", frenzyheartTribeRep);
