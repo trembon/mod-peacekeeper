@@ -123,14 +123,12 @@ private:
 
     void CompleteRequiredOracleAndFrenzyheartPreQuests(Player* player) {
         QuestStatus frenzyheartPreQuestStatus = player->GetQuestStatus(FrenzyheartTribe_PreQuestID);
-        LOG_INFO("module", "pre quest :: frenzyheart status {}", frenzyheartPreQuestStatus);
         if (frenzyheartPreQuestStatus != QUEST_STATUS_REWARDED) {
             player->AddQuest(sObjectMgr->GetQuestTemplate(FrenzyheartTribe_PreQuestID), nullptr);
             player->RewardQuest(sObjectMgr->GetQuestTemplate(FrenzyheartTribe_PreQuestID), 0, player, false);
         }
 
         QuestStatus oraclesPreQuestStatus = player->GetQuestStatus(TheOracles_PreQuestID);
-        LOG_INFO("module", "pre quest :: oracles status {}", oraclesPreQuestStatus);
         if (oraclesPreQuestStatus != QUEST_STATUS_REWARDED) {
             player->AddQuest(sObjectMgr->GetQuestTemplate(TheOracles_PreQuestID), nullptr);
             player->RewardQuest(sObjectMgr->GetQuestTemplate(TheOracles_PreQuestID), 0, player, false);
