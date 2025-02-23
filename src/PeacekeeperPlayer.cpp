@@ -100,13 +100,17 @@ private:
         int32 frenzyheartTribeRep = repMgr.GetReputation(frenzyheartTribeEntry);
         int32 oraclesRep = repMgr.GetReputation(oraclesEntry);
 
+        LOG_INFO("module", "sync rep :: player {}, frenzy {}, oracles {}", playerID, frenzyheartTribeRep, oraclesRep);
+
         if (frenzyheartTribeRep > oraclesRep) {
+            LOG_INFO("module", "sync rep :: setting oracles rep to {}", frenzyheartTribeRep);
             repMgr.SetOneFactionReputation(oraclesEntry, frenzyheartTribeRep, false);
             repMgr.SetAtWar(oraclesEntry->reputationListID, false);
 
             repMgr.SendState(repMgr.GetState(oraclesEntry->reputationListID));
         }
         if (oraclesRep > frenzyheartTribeRep) {
+            LOG_INFO("module", "sync rep :: setting frenzy rep to {}", oraclesRep);
             repMgr.SetOneFactionReputation(frenzyheartTribeEntry, oraclesRep, false);
             repMgr.SetAtWar(frenzyheartTribeEntry->reputationListID, false);
 
