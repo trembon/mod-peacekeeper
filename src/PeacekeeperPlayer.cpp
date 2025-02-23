@@ -8,20 +8,28 @@ const int32 AHeroesBurden_QuestID = 12581;
 const int32 FrenzyheartTribe_FactionID = 1104;
 const int32 TheOracles_FactionID = 1105;
 
-class PeacekeeperPlayer : public PlayerScript
+class PeacekeeperPlayer : public PlayerScript, public WorldScript
 {
 public:
     PeacekeeperPlayer() : PlayerScript("Peacekeeper", {
         PLAYERHOOK_ON_LOGIN,
         PLAYERHOOK_ON_REPUTATION_CHANGE
-        }) {
+        }), WorldScript("Peacekeeper") {
+    }
+
+    void OnAfterConfigLoad(bool /*reload*/) override
+    {
+        m_ModuleEnabled = sConfigMgr->GetOption<bool>("Peacekeeper.Enable", false);
+        m_AnnounceModuleEnabled = sConfigMgr->GetOption<bool>("Peacekeeper.Announce", false);
+
+        activeHandlers = {};
     }
 
     void OnPlayerLogin(Player* player) override
     {
-        if (sConfigMgr->GetOption<bool>("Peacekeeper.Enable", false))
+        if (m_ModuleEnabled)
         {
-            if (sConfigMgr->GetOption<bool>("Peacekeeper.Announce", true))
+            if (m_AnnounceModuleEnabled)
             {
                 ChatHandler(player->GetSession()).SendSysMessage("This server is running the |cff4CFF00Peacekeeper |rmodule.");
             }
@@ -34,7 +42,7 @@ public:
 
     bool OnPlayerReputationChange(Player* player, uint32 factionID, int32& standing, bool incremental) override {
         bool result = true;
-        if (sConfigMgr->GetOption<bool>("Peacekeeper.Enable", false))
+        if (m_ModuleEnabled)
         {
             // what to do when faction is affected by peacekeeper?
             // dont allow decrease of reputation
@@ -66,6 +74,9 @@ public:
     }
 
 private:
+    bool m_ModuleEnabled = false;
+    bool m_AnnounceModuleEnabled = false;
+
     std::map<ObjectGuid, uint32> activeHandlers;
 
     bool HasCompleted_AHeroesBurden(Player* player) {
