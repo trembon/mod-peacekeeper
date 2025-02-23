@@ -46,15 +46,12 @@ public:
             // dont allow decrease of reputation
             // if one faction gains rep, the other one gains as well
             const std::string playerName = player->GetName();
-            LOG_INFO("module", "rep gain :: player {}, faction {}, standing {}", playerName, factionID, standing);
             if (activeHandlers[playerName] == 0) {
                 activeHandlers[playerName] = factionID;
-                LOG_INFO("module", "rep gain :: can handle player {}", playerName);
 
                 // handle faction The Oracles and Frenzyheart Tribe, as they should only be handled after the quest has been completed
                 if ((factionID == FrenzyheartTribe_FactionID || factionID == TheOracles_FactionID) && HasCompleted_AHeroesBurden(player)) {
                     ReputationMgr& repMgr = player->GetReputationMgr();
-                    LOG_INFO("module", "rep gain :: is oracle/frenzy");
 
                     if (factionID == FrenzyheartTribe_FactionID) {
                         result = HandleRepuatationGain(repMgr, factionID, TheOracles_FactionID, standing);
@@ -88,13 +85,11 @@ private:
         // check if reputation is decreasing
         int32 currentRep = repMgr.GetReputation(mainEntry);
         if (currentRep > newStanding) {
-            LOG_INFO("module", "rep gain :: cant loose rep to {}", gainFactionID);
             return false;
         }
 
         // if gain, set partner faction to gain same amount
         const FactionEntry* partnerEntry = sFactionStore.LookupEntry(partnerFactionID);
-        LOG_INFO("module", "rep gain :: updating partner entry {}", partnerFactionID);
         repMgr.SetOneFactionReputation(partnerEntry, newStanding, false);
 
         return true;
@@ -109,17 +104,13 @@ private:
         int32 frenzyheartTribeRep = repMgr.GetReputation(frenzyheartTribeEntry);
         int32 oraclesRep = repMgr.GetReputation(oraclesEntry);
 
-        LOG_INFO("module", "sync rep :: player {}, frenzy {}, oracles {}", player->GetName(), frenzyheartTribeRep, oraclesRep);
-
         if (frenzyheartTribeRep > oraclesRep) {
-            LOG_INFO("module", "sync rep :: setting oracles rep to {}", frenzyheartTribeRep);
             repMgr.SetOneFactionReputation(oraclesEntry, frenzyheartTribeRep, false);
             repMgr.SetAtWar(oraclesEntry->reputationListID, false);
 
             repMgr.SendState(repMgr.GetState(oraclesEntry->reputationListID));
         }
         if (oraclesRep > frenzyheartTribeRep) {
-            LOG_INFO("module", "sync rep :: setting frenzy rep to {}", oraclesRep);
             repMgr.SetOneFactionReputation(frenzyheartTribeEntry, oraclesRep, false);
             repMgr.SetAtWar(frenzyheartTribeEntry->reputationListID, false);
 
