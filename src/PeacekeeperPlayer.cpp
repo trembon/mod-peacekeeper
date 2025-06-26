@@ -169,14 +169,14 @@ private:
         int32 scryerRep = repMgr.GetReputation(scryerEntry);
 
         if (aldorRep < 0) {
-            repMgr.SetOneFactionReputation(aldorEntry, 3000, false);
+            repMgr.SetOneFactionReputation(aldorEntry, 0, false);
             repMgr.SetAtWar(aldorEntry->reputationListID, false);
 
             repMgr.SendState(repMgr.GetState(aldorEntry->reputationListID));
         }
 
         if (scryerRep < 0) {
-            repMgr.SetOneFactionReputation(scryerEntry, 3000, false);
+            repMgr.SetOneFactionReputation(scryerEntry, 0, false);
             repMgr.SetAtWar(scryerEntry->reputationListID, false);
 
             repMgr.SendState(repMgr.GetState(scryerEntry->reputationListID));
