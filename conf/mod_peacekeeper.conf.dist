@@ -22,3 +22,10 @@ Peacekeeper.Enable = 1
 #                     0  - (Disabled)
 
 Peacekeeper.Announce = 1
+
+#    Peacekeeper.PartnerGainReputation
+#        Description: If you should gain reputation for both factions when you gain for one of them (ex: Aldor / The Scryers)
+#        Default:     1  - (Enabled)
+#                     0  - (Disabled)
+
+Peacekeeper.PartnerGainReputation = 0
